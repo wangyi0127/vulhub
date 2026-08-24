@@ -1,6 +1,6 @@
 # V2board 1.6.1 提权漏洞
 
-V2board是一个多用户代理工具管理面板。在其1.6.1版本中，引入了对于用户Session的缓存机制，服务器会将用户的认证信息储存在Redis缓存中。
+V2board 是一个多用户代理工具管理面板。在其 1.6.1 版本中，引入了对于用户 Session 的缓存机制，服务器会将用户的认证信息储存在 Redis 缓存中。
 
 但由于读取缓存时没有校验该用户是普通用户还是管理员，导致普通用户的认证信息即可访问管理员接口，造成提权漏洞。
 
@@ -10,13 +10,13 @@ V2board是一个多用户代理工具管理面板。在其1.6.1版本中，引�
 
 ## 漏洞环境
 
-执行如下命令启动一个V2board 1.6.1版本服务器：
+执行如下命令启动一个 V2board 1.6.1 版本服务器：
 
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
-服务启动后，访问`http://localhost:8080`即可查看到其登录页面。
+服务启动后，访问 `http://localhost:8080` 即可查看到其登录页面。
 
 ## 漏洞复现
 
@@ -30,7 +30,7 @@ curl -i -s -k -XPOST --data-binary "email=example%40example.com&password=a123123
 
 ![](1.png)
 
-拷贝这个认证信息，并替换到如下数据包的`Authorization`头中，发送：
+拷贝这个认证信息，并替换到如下数据包的 `Authorization` 头中，发送：
 
 ```
 GET /api/v1/user/info HTTP/1.1
@@ -48,8 +48,8 @@ Cache-Control: max-age=0
 
 ![](2.png)
 
-这一步的目的是让服务器将我们的Authorization头写入缓存中。
+这一步的目的是让服务器将我们的 Authorization 头写入缓存中。
 
-最后，只需要带上这个Authorization头，即可使用所有管理员API了。例如`http://your-ip:8080/api/v1/admin/user/fetch`
+最后，只需要带上这个 Authorization 头，即可使用所有管理员 API 了。例如 `http://your-ip:8080/api/v1/admin/user/fetch`
 
 ![](3.png)

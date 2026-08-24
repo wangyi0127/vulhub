@@ -1,4 +1,4 @@
-# PHP 8.1.0-dev User-Agentt Backdoor
+# PHP 8.1.0-dev User-Agentt Backdoor Remote Code Execution
 
 [中文版本(Chinese version)](README.zh-cn.md)
 
@@ -15,7 +15,7 @@ References:
 Start a PHP 8.1-dev server with the backdoor.
 
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
 After the environment is started, the service runs at ``http://your-ip:8080``.
